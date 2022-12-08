@@ -569,9 +569,9 @@ module.exports = grammar({
     while_statement: $ => seq(
       "while",
       "(",
-      $._expression,
+      field('condition', $._expression),
       ")",
-      choice(";", $.control_structure_body)
+      field('body', choice(";", $.control_structure_body))
     ),
 
     do_while_statement: $ => prec.right(seq(
