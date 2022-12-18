@@ -547,7 +547,10 @@ module.exports = grammar({
 
     control_structure_body: $ => choice($._block, $._statement),
 
-    _block: $ => prec(PREC.BLOCK, seq("{", optional($.statements), "}")),
+    _block: $ => prec(
+      PREC.BLOCK,
+      seq("{", optional($.statements), "}")
+    ),
 
     _loop_statement: $ => choice(
       $.for_statement,
@@ -558,12 +561,12 @@ module.exports = grammar({
     for_statement: $ => prec.right(seq(
       "for",
       "(",
-      repeat($.annotation),
-      choice($.variable_declaration, $.multi_variable_declaration),
+      field('annotations', repeat($.annotation)),
+      field('variables', choice($.variable_declaration, $.multi_variable_declaration)),
       "in",
-      $._expression,
+      field('sequence', $._expression),
       ")",
-      optional($.control_structure_body)
+      field('loop_body', optional($.control_structure_body))
     )),
 
     while_statement: $ => seq(
@@ -576,10 +579,10 @@ module.exports = grammar({
 
     do_while_statement: $ => prec.right(seq(
       "do",
-      optional($.control_structure_body),
+      field('loop_body', optional($.control_structure_body)),
       "while",
       "(",
-      $._expression,
+      field('condition', $._expression),
       ")",
     )),
 
@@ -673,12 +676,12 @@ module.exports = grammar({
     indexing_suffix: $ => seq("[", sep1($._expression, ","), "]"),
 
     navigation_suffix: $ => seq(
-      $._member_access_operator,
-      choice(
+      field('operator', $._member_access_operator),
+      field('selector', choice(
         $.simple_identifier,
         $.parenthesized_expression,
         "class"
-      )
+      ))
     ),
 
     call_suffix: $ => prec.left(seq(
@@ -691,29 +694,35 @@ module.exports = grammar({
     )),
 
     annotated_lambda: $ => seq(
-      repeat($.annotation),
-      optional($.label),
-      $.lambda_literal
+      field('annotation', repeat($.annotation)),
+      field('label', optional($.label)),
+      field('lambda', $.lambda_literal)
     ),
 
-    type_arguments: $ => seq("<", sep1($.type_projection, ","), ">"),
+    type_arguments: $ => seq(
+      "<", 
+      sep1($.type_projection, ","),
+      ">"
+    ),
 
     value_arguments: $ => seq(
       "(", 
-      optional(
-        seq(
-          sep1($.value_argument, ","),
-          optional(","),
+      field('argument_list',
+        optional(
+          seq(
+            sep1($.value_argument, ","),
+            optional(","),
+          )
         )
       ),
       ")"
     ),
 
     value_argument: $ => seq(
-      optional($.annotation),
+      field('annotation', optional($.annotation)),
       optional(seq($.simple_identifier, "=")),
       optional("*"),
-      $._expression
+      field('expression', $._expression)
     ),
 
     _primary_expression: $ => choice(
@@ -733,9 +742,18 @@ module.exports = grammar({
       $.jump_expression
     ),
 
-    parenthesized_expression: $ => seq("(", $._expression, ")"),
+    parenthesized_expression: $ => seq(
+      "(", 
+      field('expression', $._expression), 
+      ")"
+    ),
 
-    collection_literal: $ => seq("[", $._expression, repeat(seq(",", $._expression)), "]"),
+    collection_literal: $ => seq(
+      "[", 
+      field('first', $._expression),
+      field('rest', repeat(seq(",", $._expression))), 
+      "]"
+    ),
 
     _literal_constant: $ => choice(
       $.boolean_literal,
@@ -781,8 +799,8 @@ module.exports = grammar({
 
     lambda_literal: $ => prec(PREC.LAMBDA_LITERAL, seq(
       "{",
-      optional(seq(optional($.lambda_parameters), "->")),
-      optional($.statements),
+      field('parameter_list', optional(seq(optional($.lambda_parameters), "->"))),
+      field('statements', optional($.statements)),
       "}"
     )),
 
