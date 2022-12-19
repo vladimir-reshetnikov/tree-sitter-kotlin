@@ -620,11 +620,19 @@ module.exports = grammar({
 
     postfix_expression: $ => prec.left(PREC.POSTFIX, seq($._expression, $._postfix_unary_operator)),
 
-    call_expression: $ => prec.left(PREC.POSTFIX, seq($._expression, $.call_suffix)),
+    call_expression: $ => prec.left(
+      PREC.POSTFIX, 
+      seq(
+        field('expression', $._expression),
+        field('suffix', $.call_suffix))),
 
     indexing_expression: $ => prec.left(PREC.POSTFIX, seq($._expression, $.indexing_suffix)),
 
-    navigation_expression: $ => prec.left(PREC.POSTFIX, seq($._expression, $.navigation_suffix)),
+    navigation_expression: $ => prec.left(
+      PREC.POSTFIX, 
+      seq(
+        field('expression', $._expression),
+        field('suffix', $.navigation_suffix))),
 
     prefix_expression: $ => prec.right(seq(choice($.annotation, $.label, $._prefix_unary_operator), $._expression)),
 
@@ -799,7 +807,16 @@ module.exports = grammar({
 
     lambda_literal: $ => prec(PREC.LAMBDA_LITERAL, seq(
       "{",
-      field('parameter_list', optional(seq(optional($.lambda_parameters), "->"))),
+      field('parameter_list', 
+        optional(
+          seq(
+            optional(
+              field('parameters', $.lambda_parameters)
+            ), 
+            "->"
+          )
+        )
+      ),
       field('statements', optional($.statements)),
       "}"
     )),
