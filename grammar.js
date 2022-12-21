@@ -405,12 +405,16 @@ module.exports = grammar({
     parameters_with_optional_type: $ => seq("(", sep1($.parameter_with_optional_type, ","), ")"),
 
     parameter_with_optional_type: $ => seq(
-      optional($.parameter_modifiers),
-      $.simple_identifier,
-      optional(seq(":", $._type))
+      field("modifiers", optional($.parameter_modifiers)),
+      field("name", $.simple_identifier),
+      optional(seq(":", field("type", $._type)))
     ),
 
-    parameter: $ => seq($.simple_identifier, ":", $._type),
+    parameter: $ => seq(
+      field("name", $.simple_identifier), 
+      ":", 
+      field("type", $._type)
+    ),
 
     object_declaration: $ => prec.right(seq(
       optional($.modifiers),
@@ -836,10 +840,10 @@ module.exports = grammar({
 
     anonymous_function: $ => prec.right(seq(
       "fun",
-      optional(seq(sep1($._simple_user_type, "."), ".")), // TODO
-      $._function_value_parameters,
-      optional(seq(":", $._type)),
-      optional($.function_body)
+      optional(field("receiver", seq(sep1($._simple_user_type, "."), "."))), // TODO
+      field("parameters", $._function_value_parameters),
+      optional(seq(":", field("type", $._type))),
+      optional(field("body", $.function_body))
     )),
 
     _function_literal: $ => choice(
@@ -850,7 +854,7 @@ module.exports = grammar({
     object_literal: $ => seq(
       "object",
       optional(seq(":", $._delegation_specifiers)),
-      $.class_body
+      field("body", $.class_body)
     ),
 
     this_expression: $ => "this",
