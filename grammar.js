@@ -355,8 +355,8 @@ module.exports = grammar({
 
     variable_declaration: $ => prec.left(PREC.VAR_DECL, seq(
       // repeat($.annotation), TODO
-      $.simple_identifier,
-      optional(seq(":", $._type))
+      field("name", $.simple_identifier),
+      optional(seq(":", field ("type", $._type)))
     )),
 
     property_declaration: $ => prec.right(seq(
@@ -811,16 +811,7 @@ module.exports = grammar({
 
     lambda_literal: $ => prec(PREC.LAMBDA_LITERAL, seq(
       "{",
-      field('parameter_list', 
-        optional(
-          seq(
-            optional(
-              field('parameters', $.lambda_parameters)
-            ), 
-            "->"
-          )
-        )
-      ),
+      optional(seq(optional(field('parameters', $.lambda_parameters)), "->")),
       field('statements', optional($.statements)),
       "}"
     )),
