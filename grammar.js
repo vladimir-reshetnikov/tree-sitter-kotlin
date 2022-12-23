@@ -822,7 +822,7 @@ module.exports = grammar({
       ')'
     ),
 
-    lambda_parameters: $ => sep1($._lambda_parameter, ","),
+    lambda_parameters: $ => sep1(field('parameter', $._lambda_parameter), ","),
 
     _lambda_parameter: $ => choice(
       $.variable_declaration,

@@ -4120,8 +4120,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "_lambda_parameter"
+          "type": "FIELD",
+          "name": "parameter",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_lambda_parameter"
+          }
         },
         {
           "type": "REPEAT",
@@ -4133,8 +4137,12 @@
                 "value": ","
               },
               {
-                "type": "SYMBOL",
-                "name": "_lambda_parameter"
+                "type": "FIELD",
+                "name": "parameter",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_lambda_parameter"
+                }
               }
             ]
           }

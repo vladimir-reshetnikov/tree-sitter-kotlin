@@ -5821,20 +5821,21 @@
   {
     "type": "lambda_parameters",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "multi_variable_declaration",
-          "named": true
-        },
-        {
-          "type": "variable_declaration",
-          "named": true
-        }
-      ]
+    "fields": {
+      "parameter": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "multi_variable_declaration",
+            "named": true
+          },
+          {
+            "type": "variable_declaration",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
