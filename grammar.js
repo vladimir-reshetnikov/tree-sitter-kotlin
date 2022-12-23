@@ -319,7 +319,7 @@ module.exports = grammar({
 
     _function_value_parameters: $ => seq(
       "(",
-      optional(sep1($._function_value_parameter, ",")),
+      optional(sep1(field('parameter', $._function_value_parameter), ",")),
       optional(","),
       ")"
     ),
