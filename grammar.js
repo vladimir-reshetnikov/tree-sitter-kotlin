@@ -698,10 +698,12 @@ module.exports = grammar({
 
     call_suffix: $ => prec.left(seq(
       // this introduces ambiguities with 'less than' for comparisons
-      optional($.type_arguments),
+      optional(field('type_arguments', $.type_arguments)),
       choice(
-        seq(optional($.value_arguments), $.annotated_lambda),
-        $.value_arguments
+        seq(
+          optional(field('value_arguments_before_lambda', $.value_arguments)), 
+          field('trailing_lambda', $.annotated_lambda)),
+        field('value_arguments', $.value_arguments)
       )
     )),
 
