@@ -176,7 +176,7 @@ module.exports = grammar({
     top_level_object: $ => seq($._declaration, optional($._semi)),
 
     type_alias: $ => seq(
-      optional($.modifiers),
+      optional(field('modifiers', $.modifiers)),
       "typealias",
       alias($.simple_identifier, $.type_identifier),
       "=",
@@ -206,24 +206,24 @@ module.exports = grammar({
 
     class_declaration: $ => prec.right(choice(
       seq(
-        optional($.modifiers),
-        choice("class", "interface"),
+        optional(field('modifiers', $.modifiers)),
+        field('kind', choice("class", "interface")),
         alias($.simple_identifier, $.type_identifier),
-        optional($.type_parameters),
-        optional($.primary_constructor),
-        optional(seq(":", $._delegation_specifiers)),
-        optional($.type_constraints),
-        optional($.class_body)
+        optional(field('type_parameters', $.type_parameters)),
+        optional(field('primary_constructor', $.primary_constructor)),
+        optional(seq(":", field('delegation_specifiers', $._delegation_specifiers))),
+        optional(field('constraints', $.type_constraints)),
+        optional(field('body', $.class_body))
       ),
       seq(
         optional($.modifiers),
-        "enum", "class",
+        field('kind', "enum"), "class",
         alias($.simple_identifier, $.type_identifier),
-        optional($.type_parameters),
-        optional($.primary_constructor),
-        optional(seq(":", $._delegation_specifiers)),
-        optional($.type_constraints),
-        optional($.enum_class_body)
+        optional(field('type_parameters', $.type_parameters)),
+        optional(field('primary_constructor', $.primary_constructor)),
+        optional(seq(":", field('delegation_specifiers', $._delegation_specifiers))),
+        optional(field('constraints', $.type_constraints)),
+        optional(field('body', $.enum_class_body))
       )
     )),
 
@@ -411,8 +411,8 @@ module.exports = grammar({
     ),
 
     parameter: $ => seq(
-      field("name", $.simple_identifier), 
-      ":", 
+      field("name", $.simple_identifier),
+      ":",
       field("type", $._type)
     ),
 
@@ -625,7 +625,7 @@ module.exports = grammar({
     postfix_expression: $ => prec.left(PREC.POSTFIX, seq($._expression, $._postfix_unary_operator)),
 
     call_expression: $ => prec.left(
-      PREC.POSTFIX, 
+      PREC.POSTFIX,
       seq(
         field('expression', $._expression),
         field('suffix', $.call_suffix))),
@@ -633,12 +633,17 @@ module.exports = grammar({
     indexing_expression: $ => prec.left(PREC.POSTFIX, seq($._expression, $.indexing_suffix)),
 
     navigation_expression: $ => prec.left(
-      PREC.POSTFIX, 
+      PREC.POSTFIX,
       seq(
         field('expression', $._expression),
         field('suffix', $.navigation_suffix))),
 
-    prefix_expression: $ => prec.right(seq(choice($.annotation, $.label, $._prefix_unary_operator), $._expression)),
+    prefix_expression: $ => prec.right(seq(
+      field('prefix', choice(
+        $.annotation,
+        $.label,
+        $._prefix_unary_operator)),
+      field('expression', $._expression))),
 
     as_expression: $ => prec.left(PREC.AS, seq($._expression, $._as_operator, $._type)),
 
@@ -671,9 +676,11 @@ module.exports = grammar({
 
     elvis_expression: $ => prec.left(PREC.ELVIS, seq($._expression, "?:", $._expression)),
 
-    check_expression: $ => prec.left(PREC.CHECK, seq($._expression, choice(
-      seq($._in_operator, $._expression),
-      seq($._is_operator, $._type)))),
+    check_expression: $ => prec.left(PREC.CHECK, seq(
+      field('left_expression', $._expression),
+      choice(
+        seq(field('in_operator', $._in_operator), field('right_expression', $._expression)),
+        seq(field('is_operator', $._is_operator), field('right_type', $._type))))),
 
     comparison_expression: $ => prec.left(PREC.COMPARISON, seq($._expression, $._comparison_operator, $._expression)),
 
@@ -701,7 +708,7 @@ module.exports = grammar({
       optional(field('type_arguments', $.type_arguments)),
       choice(
         seq(
-          optional(field('value_arguments_before_lambda', $.value_arguments)), 
+          optional(field('value_arguments_before_lambda', $.value_arguments)),
           field('trailing_lambda', $.annotated_lambda)),
         field('value_arguments', $.value_arguments)
       )
@@ -714,13 +721,13 @@ module.exports = grammar({
     ),
 
     type_arguments: $ => seq(
-      "<", 
+      "<",
       sep1($.type_projection, ","),
       ">"
     ),
 
     value_arguments: $ => seq(
-      "(", 
+      "(",
       field('argument_list',
         optional(
           seq(
@@ -757,15 +764,15 @@ module.exports = grammar({
     ),
 
     parenthesized_expression: $ => seq(
-      "(", 
-      field('expression', $._expression), 
+      "(",
+      field('expression', $._expression),
       ")"
     ),
 
     collection_literal: $ => seq(
-      "[", 
+      "[",
       field('first', $._expression),
-      field('rest', repeat(seq(",", $._expression))), 
+      field('rest', repeat(seq(",", $._expression))),
       "]"
     ),
 
