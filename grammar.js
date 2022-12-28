@@ -229,25 +229,25 @@ module.exports = grammar({
 
     primary_constructor: $ => seq(
       optional(seq(optional($.modifiers), "constructor")),
-      $._class_parameters
+      field('class_parameters', $._class_parameters)
     ),
 
     class_body: $ => seq("{", optional($._class_member_declarations), "}"),
 
     _class_parameters: $ => seq(
       "(",
-      optional(sep1($.class_parameter, ",")),
+      optional(sep1(field('class_parameter', $.class_parameter), ",")),
       optional(","),
       ")"
     ),
 
     class_parameter: $ => seq(
-      optional($.modifiers),
-      optional(choice("val", "var")),
-      $.simple_identifier,
+      optional(field('modifiers', $.modifiers)),
+      optional(field('parameter_kind', choice("val", "var"))),
+      field('parameter_name', $.simple_identifier),
       ":",
-      $._type,
-      optional(seq("=", $._expression))
+      field('parameter_type', $._type),
+      optional(seq("=", field('initializer', $._expression)))
     ),
 
     _delegation_specifiers: $ => prec.left(sep1(
