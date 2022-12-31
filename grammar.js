@@ -922,10 +922,11 @@ module.exports = grammar({
 
     try_expression: $ => seq(
       "try",
-      $._block,
+      field('try', $._block),
       choice(
-        seq(repeat1($.catch_block), optional($.finally_block)),
-        $.finally_block
+        field('finally', $.finally_block),
+        seq(repeat1(field('catch', $.catch_block)), field('finally', $.finally_block)),
+        repeat1(field('catch', $.catch_block)),
       )
     ),
 

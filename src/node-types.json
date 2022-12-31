@@ -9223,24 +9223,45 @@
   {
     "type": "try_expression",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "catch_block",
-          "named": true
-        },
-        {
-          "type": "finally_block",
-          "named": true
-        },
-        {
-          "type": "statements",
-          "named": true
-        }
-      ]
+    "fields": {
+      "catch": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "catch_block",
+            "named": true
+          }
+        ]
+      },
+      "finally": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "finally_block",
+            "named": true
+          }
+        ]
+      },
+      "try": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "statements",
+            "named": true
+          },
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
+          }
+        ]
+      }
     }
   },
   {
