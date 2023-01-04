@@ -1894,6 +1894,16 @@
           }
         ]
       },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
       "primary_constructor": {
         "multiple": false,
         "required": false,
@@ -1916,15 +1926,11 @@
       }
     },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
         {
           "type": "modifiers",
-          "named": true
-        },
-        {
-          "type": "type_identifier",
           "named": true
         }
       ]

@@ -208,7 +208,7 @@ module.exports = grammar({
       seq(
         optional(field('modifiers', $.modifiers)),
         field('kind', choice("class", "interface")),
-        alias($.simple_identifier, $.type_identifier),
+        field('name', alias($.simple_identifier, $.type_identifier)),
         optional(field('type_parameters', $.type_parameters)),
         optional(field('primary_constructor', $.primary_constructor)),
         optional(seq(":", field('delegation_specifiers', $._delegation_specifiers))),
@@ -218,7 +218,7 @@ module.exports = grammar({
       seq(
         optional($.modifiers),
         field('kind', "enum"), "class",
-        alias($.simple_identifier, $.type_identifier),
+        field('name', alias($.simple_identifier, $.type_identifier)),
         optional(field('type_parameters', $.type_parameters)),
         optional(field('primary_constructor', $.primary_constructor)),
         optional(seq(":", field('delegation_specifiers', $._delegation_specifiers))),

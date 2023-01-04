@@ -357,13 +357,17 @@
                 }
               },
               {
-                "type": "ALIAS",
+                "type": "FIELD",
+                "name": "name",
                 "content": {
-                  "type": "SYMBOL",
-                  "name": "simple_identifier"
-                },
-                "named": true,
-                "value": "type_identifier"
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "simple_identifier"
+                  },
+                  "named": true,
+                  "value": "type_identifier"
+                }
               },
               {
                 "type": "CHOICE",
@@ -484,13 +488,17 @@
                 "value": "class"
               },
               {
-                "type": "ALIAS",
+                "type": "FIELD",
+                "name": "name",
                 "content": {
-                  "type": "SYMBOL",
-                  "name": "simple_identifier"
-                },
-                "named": true,
-                "value": "type_identifier"
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "simple_identifier"
+                  },
+                  "named": true,
+                  "value": "type_identifier"
+                }
               },
               {
                 "type": "CHOICE",
